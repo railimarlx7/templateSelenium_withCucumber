@@ -1,44 +1,28 @@
 package pageActions;
-import utils.DriverFactory;
 
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
+
 import pageElements.LoginPageElements;
 
-public class LoginPageActions {
-
-    LoginPageElements LoginPageElements = null;
-
-    public LoginPageActions() {
-
-        this.LoginPageElements = new LoginPageElements();
-
-        PageFactory.initElements(DriverFactory.getDriver(),LoginPageElements);
+public class LoginPageActions extends LoginPageElements {
+    // Inicializa os elementos da página usando o PageFactory
+    public LoginPageActions(WebDriver driver) {
+        PageFactory.initElements(driver, this);
     }
 
-    public void setUserName(String strUserName) {
-        LoginPageElements.usernameField.sendKeys(strUserName);
+    // Digita o usuário no campo de nome de usuário
+    public void setUserName(String username) {
+        usernameField.sendKeys(username);
     }
 
-    // Set password in password textbox
-    public void setPassword(String strPassword) {
-        LoginPageElements.passwordField.sendKeys(strPassword);
+    // Digita a senha no campo de senha
+    public void setPassword(String password) {
+        passwordField.sendKeys(password);
     }
 
-    // Click on login button
-    public void clickLogin() {
-        LoginPageElements.submitButton.click();
-    }
-
-    public void login(String strUserName, String strPassword) {
-
-        // Fill user name
-        this.setUserName(strUserName);
-
-        // Fill password
-        this.setPassword(strPassword);
-
-        // Click Login button
-        this.clickLogin();
-
+    // Clica no botão de envio
+    public void clickSubmitButton() {
+        submitButton.click();
     }
 }

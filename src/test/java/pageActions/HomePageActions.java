@@ -1,21 +1,19 @@
 package pageActions;
-import utils.DriverFactory;
 
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
+
 import pageElements.HomePageElements;
 
-public class HomePageActions {
-    HomePageElements homePageElements = null;
+public class HomePageActions extends HomePageElements {
 
-    public HomePageActions() {
+	public HomePageActions(WebDriver driver) {
+		// Inicializar os elementos da página usando o PageFactory
+		PageFactory.initElements(driver, this);
+	}
 
-        this.homePageElements = new HomePageElements();
-
-        PageFactory.initElements(DriverFactory.getDriver(),homePageElements);
-    }
-
-      public String getHomePageText() {
-        return homePageElements.successMessage.getText();
-    }
-
+	public String getSuccessMessage() {
+		// Obter o texto da mensagem de sucesso
+		return successMessage.getText();
+	}
 }

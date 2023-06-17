@@ -1,36 +1,25 @@
 package pages;
-import org.openqa.selenium.By;
+
 import org.openqa.selenium.WebDriver;
 
+import pageActions.LoginPageActions;
+import utils.ConfigReader;
+
 public class LoginPage {
-	private WebDriver driver;
+    private LoginPageActions loginPageActions;
 
-	private By usernameField = By.id("username");
-	private By passwordField = By.id("password");
-	private By submitButton = By.id("submit");
+    public LoginPage(WebDriver driver) {
+        // Inicializar a classe LoginPageActions passando o driver como argumento
+        this.loginPageActions = new LoginPageActions(driver);
+    }
 
-	public LoginPage(WebDriver driver) {
-		this.driver = driver;
-	}
-
-	public void enterUsername(String username) {
-		
-		// Localizar e preencher o campo de nome de usuário
-		driver.findElement(usernameField).sendKeys(username);
-	}
-
-	public void enterPassword(String password) {
-		
-		// Localizar e preencher o campo de senha
-		driver.findElement(passwordField).sendKeys(password);
-	}
-
-	public HomePage clickSubmitButton() {
-		
-		// Clicar no botão de envio
-		driver.findElement(submitButton).click();
-
-		// Retornar a página inicial após o login
-		return new HomePage(driver);
-	}
+    public void login() {
+        // Chamar os métodos da classe LoginPageActions para realizar o login
+        // Obtém o nome de usuário do arquivo de configuração usando o ConfigReader
+        loginPageActions.setUserName(ConfigReader.getUsername());
+        // Obtém a senha do arquivo de configuração usando o ConfigReader
+        loginPageActions.setPassword(ConfigReader.getPassword());
+        // Clica no botão de envio para fazer login
+        loginPageActions.clickSubmitButton();
+    }
 }

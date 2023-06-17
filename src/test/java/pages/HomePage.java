@@ -1,19 +1,24 @@
 package pages;
-import org.openqa.selenium.By;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.openqa.selenium.WebDriver;
 
-public class HomePage {
-	private WebDriver driver;
+import pageActions.HomePageActions;
 
-	private By successMessage = By.cssSelector("p.has-text-align-center > strong");
+public class HomePage {
+
+	private HomePageActions homePageActions;
 
 	public HomePage(WebDriver driver) {
-		this.driver = driver;
+		// Inicializar a classe HomePageActions passando o driver como argumento
+		this.homePageActions = new HomePageActions(driver);
 	}
 
-	public String getSuccessMessage() {
-		
-		// Obter o texto da mensagem de sucesso
-		return driver.findElement(successMessage).getText();
+	public void validSuccessMessage() {
+		// Verificar a mensagem de sucesso na página inicial
+		String successMessage = homePageActions.getSuccessMessage();
+		assertEquals("Congratulations student. You successfully logged in!", successMessage,
+				"Incorrect success message");
 	}
 }
