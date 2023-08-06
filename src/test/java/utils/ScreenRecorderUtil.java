@@ -30,51 +30,62 @@ import org.monte.screenrecorder.ScreenRecorder;
 
 public class ScreenRecorderUtil extends ScreenRecorder {
 
-	public static ScreenRecorder screenRecorder;
-	public String name;
+    public static ScreenRecorder screenRecorder;
+    public String name;
 
-	public ScreenRecorderUtil(GraphicsConfiguration cfg, Rectangle captureArea, Format fileFormat, Format screenFormat,
-			Format mouseFormat, Format audioFormat, File movieFolder, String name) throws IOException, AWTException {
+    public ScreenRecorderUtil(GraphicsConfiguration cfg, Rectangle captureArea, Format fileFormat,
+            Format screenFormat, Format mouseFormat, Format audioFormat, File movieFolder, String name)
+            throws IOException, AWTException {
 
-		super(cfg, captureArea, fileFormat, screenFormat, mouseFormat, audioFormat, movieFolder);
-		this.name = name;
-	}
+        super(cfg, captureArea, fileFormat, screenFormat, mouseFormat, audioFormat, movieFolder);
+        this.name = name;
+    }
 
-	@Override
-	protected File createMovieFile(Format fileFormat) throws IOException {
-		if (!movieFolder.exists()) {
-			movieFolder.mkdirs();
-		} else if (!movieFolder.isDirectory()) {
-			throw new IOException("\"" + movieFolder + "\" Não é um diretório");
-		}
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-		return new File(movieFolder,
-				name + "-" + dateFormat.format(new Date()) + "." + Registry.getInstance().getExtension(fileFormat));
-	}
+    @Override
+    protected File createMovieFile(Format fileFormat) throws IOException {
+        if (!movieFolder.exists()) {
+            movieFolder.mkdirs();
+        } else if (!movieFolder.isDirectory()) {
+            throw new IOException("\"" + movieFolder + "\" Não é um diretório");
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        return new File(movieFolder,
+                name + "-" + dateFormat.format(new Date()) + "." + Registry.getInstance().getExtension(fileFormat));
+    }
 
-	public static void startRecording(String methodName) throws Exception {
-		File file = new File("target", "videos");
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int width = screenSize.width;
-		int height = screenSize.height;
+    public static void startRecording(String methodName) throws Exception {
+        File file = new File("target", "videos");
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = screenSize.width;
+        int height = screenSize.height;
 
-		Rectangle captureSize = new Rectangle(0, 0, width, height);
+        Rectangle captureSize = new Rectangle(0, 0, width, height);
 
-		GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-				.getDefaultConfiguration();
+        GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+                .getDefaultConfiguration();
+        // Define o formato do arquivo como MP4
+        Format fileFormat = new Format(MediaTypeKey, MediaType.FILE, MimeTypeKey, "video/mp4");
 
-		screenRecorder = new ScreenRecorderUtil(gc, captureSize,
-				new Format(MediaTypeKey, MediaType.FILE, MimeTypeKey, MIME_AVI),
-				new Format(MediaTypeKey, MediaType.VIDEO, EncodingKey, ENCODING_AVI_TECHSMITH_SCREEN_CAPTURE,
-						CompressorNameKey, ENCODING_AVI_TECHSMITH_SCREEN_CAPTURE, DepthKey, 24, FrameRateKey,
-						Rational.valueOf(15), QualityKey, 1.0f, KeyFrameIntervalKey, 15 * 60),
-				new Format(MediaTypeKey, MediaType.VIDEO, EncodingKey, "black", FrameRateKey, Rational.valueOf(30)),
-				null, file, methodName);
+        Rational frameRate = new Rational(15);
+        Rational keyFrameRate = new Rational(15 * 60);
+        
+        screenRecorder = new ScreenRecorderUtil(gc, captureSize,
+                new Format(MediaTypeKey, MediaType.VIDEO, EncodingKey, ENCODING_AVI_TECHSMITH_SCREEN_CAPTURE,
+                        CompressorNameKey, ENCODING_AVI_TECHSMITH_SCREEN_CAPTURE, DepthKey, 24, FrameRateKey,
+                        frameRate, QualityKey, 1.0f, KeyFrameIntervalKey, keyFrameRate),
+                fileFormat,
+                new Format(MediaTypeKey, MediaType.VIDEO, EncodingKey, "black", FrameRateKey, new Rational(30)),
+                null, file, methodName);
 
-		screenRecorder.start();
-	}
+        if (screenRecorder != null) {
+            screenRecorder.start();
+        } else {
+            // Tratar o caso em que a criação do objeto falhou
+            throw new Exception("Falha ao criar a instância do ScreenRecorderUtil");
+        }
+    }
 
-	public static void stopRecording() throws Exception {
-		screenRecorder.stop();
-	}
+    public static void stopRecording() throws Exception {
+        screenRecorder.stop();
+    }
 }

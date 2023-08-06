@@ -26,7 +26,7 @@ public class LoginStepDefinitions {
         url = ConfigReader.getUrl();
         driver.get(url);
         // Inicia a gravação do video
-        ScreenRecorderUtil.startRecording("Star");
+//        ScreenRecorderUtil.startRecording("Star");
     }
 
     @Dado("que estou logado no sistema")
@@ -47,7 +47,7 @@ public class LoginStepDefinitions {
     @After
     public void tearDown() throws Exception {
     	// Finaliza a gravação do video
-    	ScreenRecorderUtil.stopRecording();
+//    	ScreenRecorderUtil.stopRecording();
         // Encerramento do driver após a execução do teste
         DriverFactory.quitDriver();
     }
